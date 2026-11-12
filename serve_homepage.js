@@ -22,9 +22,17 @@ const MIME_TYPES = {
 };
 
 const server = http.createServer((req, res) => {
-  let reqPath = decodeURIComponent(req.url.split('?')[0]);
-  if (reqPath === '/' || reqPath === '') {
-    reqPath = '/index.html';
+  let reqPath;
+  try {
+    reqPath = decodeURIComponent(req.url.split('?')[0]);
+  } catch (_) {
+    res.writeHead(400);
+    res.end('Bad Request');
+    return;
+  }
+  // Folders serve their index.html, like Netlify/Vercel do (e.g. /app/).
+  if (reqPath === '' || reqPath.endsWith('/')) {
+    reqPath += 'index.html';
   }
 
   const safePath = path.normalize(path.join(ROOT_DIR, reqPath));
@@ -35,6 +43,12 @@ const server = http.createServer((req, res) => {
   }
 
   fs.stat(safePath, (err, stats) => {
+    if (!err && stats.isDirectory()) {
+      // /app -> /app/ so the app's relative paths resolve inside the folder.
+      res.writeHead(301, { Location: reqPath + '/' });
+      res.end();
+      return;
+    }
     if (err || !stats.isFile()) {
       res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
       res.end('404 Not Found');

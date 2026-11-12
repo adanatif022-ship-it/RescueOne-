@@ -15,11 +15,11 @@ class AppConfig {
   /// worldwide (GSM standard), 911 across the Americas.
   static const List<String> emergencyNumberPresets = ['999', '112', '911'];
 
-  /// Project support channels (Help & Support screen). These are the
-  /// original project's placeholder values - replace them with the real
-  /// support line/inbox before publishing the app.
-  static const String supportPhone = '920000000';
-  static const String supportEmail = 'support@rescueone.app';
+  /// Support channels (Help & Support screen): Call, WhatsApp and Email.
+  /// The phone is in international format - WhatsApp needs the country
+  /// code (wa.me/60182974348).
+  static const String supportPhone = '+60182974348';
+  static const String supportEmail = 'adanatif022@gmail.com';
 
   /// Map position used only before the first real GPS fix (never used to
   /// query hospitals). Aden - the city used for testing in the report.

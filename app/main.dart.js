@@ -107748,7 +107748,7 @@ r.push(A.Ds(B.a2A,A.h(a,!0,l).m("help_center_button"),!1,new A.ajs(a)))
 return A.eC(k,m,A.dJ(!0,A.il(A.b([new A.fS(A.aO(r,B.aP,B.i,B.p),16,n)],q),B.Y,n,n,B.ar,!1),B.Y,!0),n,n,n)}}
 A.ajp.prototype={
 $0(){var s=null,r=A.bU("[^0-9+*#]",!0,!1)
-return new A.dT().lI(A.h2(s,s,A.dO("920000000",r,""),s,s,s,"tel",s))},
+return new A.dT().lI(A.h2(s,s,A.dO("+60182974348",r,""),s,s,s,"tel",s))},
 $S:0}
 A.ajq.prototype={
 $0(){var s=0,r=A.u(t.H),q=this,p,o,n,m,l
@@ -107757,7 +107757,7 @@ for(;;)switch(s){case 0:p=q.a
 o=t.J
 n=A.h(p,!1,o).m("help_whatsapp_greeting")
 m=A.bU("[^0-9]",!0,!1)
-l=A.dO("920000000",m,"")
+l=A.dO("+60182974348",m,"")
 n=A.nC(2,n,B.as,!1)
 s=2
 return A.m(new A.dT().iw(A.cA("https://wa.me/"+l+("?text="+n),0,null),!0),$async$$0)
@@ -107766,10 +107766,10 @@ return A.r(null,r)}})
 return A.t($async$$0,r)},
 $S:3}
 A.ajr.prototype={
-$0(){return new A.dT().a3M("support@rescueone.app",A.h(this.a,!1,t.J).m("app_name"))},
+$0(){return new A.dT().a3M("adanatif022@gmail.com",A.h(this.a,!1,t.J).m("app_name"))},
 $S:0}
 A.ajs.prototype={
-$0(){return new A.dT().a3M("support@rescueone.app",A.h(this.a,!1,t.J).m("app_name"))},
+$0(){return new A.dT().a3M("adanatif022@gmail.com",A.h(this.a,!1,t.J).m("app_name"))},
 $S:0}
 A.Af.prototype={
 F(a){var s,r=null,q=A.bg(16),p=$.p,o=p?B.bW:B.n,n=A.bg(16),m=A.h8((p?B.v:B.u).bl(0.2),1)

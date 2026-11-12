@@ -12,7 +12,6 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/display_name.dart';
 import '../../core/utils/incident_ui.dart';
-import '../../core/widgets/disclaimer_banner.dart';
 import '../../core/widgets/premium_card.dart';
 import '../../core/widgets/responsive_section.dart';
 import '../../core/widgets/section_title.dart';
@@ -103,8 +102,6 @@ class HomeScreen extends StatelessWidget {
                           ),
                   ),
                   _RecentIncidentsList(incidents: incidentRepo.incidents),
-                  const SizedBox(height: AppTheme.space5),
-                  const DisclaimerBanner(textKey: 'home_prototype_notice'),
                   const SizedBox(height: 112), // clears the central SOS FAB
                 ],
               ),

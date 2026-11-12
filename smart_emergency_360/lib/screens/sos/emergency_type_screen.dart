@@ -38,6 +38,7 @@ class _EmergencyTypeScreenState extends State<EmergencyTypeScreen> {
   _LocationState _locationState = _LocationState.idle;
   double? _lat;
   double? _lng;
+  double? _accuracyMeters;
   bool _creating = false;
 
   @override
@@ -62,12 +63,18 @@ class _EmergencyTypeScreenState extends State<EmergencyTypeScreen> {
     if (result.hasLocation) {
       setState(() {
         _lat = result.latitude;
+        _accuracyMeters = result.accuracyMeters;
         _lng = result.longitude;
         _locationState = _LocationState.attached;
       });
       // Prepare the hospital recommendation around this exact spot while
       // the user is still choosing - it doesn't block the alert.
-      context.read<HospitalRepository>().useLocation(_lat!, _lng!);
+      context.read<HospitalRepository>().useLocation(
+        _lat!,
+        _lng!,
+        accuracyMeters: result.accuracyMeters,
+        approximateOnly: result.approximateOnly,
+      );
     } else {
       setState(() => _locationState = _LocationState.failed);
     }
@@ -169,6 +176,7 @@ class _EmergencyTypeScreenState extends State<EmergencyTypeScreen> {
                   _LocationCard(
                     state: _locationState,
                     onRetry: _detectLocation,
+                    accuracyMeters: _accuracyMeters,
                   ),
                   const SizedBox(height: 16),
                   _SilentToggleCard(
@@ -254,9 +262,14 @@ class _TypeGrid extends StatelessWidget {
 
 class _LocationCard extends StatelessWidget {
   final _LocationState state;
+  final double? accuracyMeters;
   final VoidCallback onRetry;
 
-  const _LocationCard({required this.state, required this.onRetry});
+  const _LocationCard({
+    required this.state,
+    required this.onRetry,
+    this.accuracyMeters,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -292,7 +305,11 @@ class _LocationCard extends StatelessWidget {
             const SizedBox(width: 10),
             Expanded(
               child: Text(
-                context.tr(textKey),
+                // e.g. "Location attached (±12 m)" - so the user knows
+                // how close the shared position is.
+                state == _LocationState.attached && accuracyMeters != null
+                    ? '${context.tr(textKey)} (±${accuracyMeters!.round()} m)'
+                    : context.tr(textKey),
                 style: const TextStyle(fontWeight: FontWeight.w600),
               ),
             ),

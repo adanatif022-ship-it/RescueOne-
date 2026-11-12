@@ -54,6 +54,8 @@ class HospitalRepository extends ChangeNotifier {
   double _lat = AppConfig.defaultLatitude;
   double _lng = AppConfig.defaultLongitude;
   bool _hasRealFix = false;
+  double? _accuracyMeters;
+  bool _approximateOnly = false;
   HospitalLoadStatus _status = HospitalLoadStatus.idle;
   String? _locationErrorKey;
   String? _dataErrorKey;
@@ -69,6 +71,12 @@ class HospitalRepository extends ChangeNotifier {
   Future<void>? _inFlight;
 
   bool get hasRealFix => _hasRealFix;
+
+  /// How close the current fix is to the real position, in metres.
+  double? get accuracyMeters => _hasRealFix ? _accuracyMeters : null;
+
+  /// The user allowed only approximate location (can be km off).
+  bool get approximateOnly => _hasRealFix && _approximateOnly;
   HospitalLoadStatus get status => _status;
   bool get isLoading => _status == HospitalLoadStatus.loading;
   bool get hasStarted => _status != HospitalLoadStatus.idle;
@@ -134,19 +142,28 @@ class HospitalRepository extends ChangeNotifier {
       return;
     }
     _locationErrorKey = null;
+    _accuracyMeters = location.accuracyMeters;
+    _approximateOnly = location.approximateOnly;
     await _downloadAround(location.latitude!, location.longitude!);
   }
 
   /// Reuses a fix another screen already obtained (e.g. the SOS screen),
   /// so the recommendation is computed around the incident location
   /// without asking for GPS twice. Downloads only when needed.
-  Future<void> useLocation(double lat, double lng) {
+  Future<void> useLocation(
+    double lat,
+    double lng, {
+    double? accuracyMeters,
+    bool approximateOnly = false,
+  }) {
     final movedKm = _dataLat == null
         ? double.infinity
         : haversineKm(_dataLat!, _dataLng!, lat, lng);
     _lat = lat;
     _lng = lng;
     _hasRealFix = true;
+    _accuracyMeters = accuracyMeters;
+    _approximateOnly = approximateOnly;
     _locationErrorKey = null;
     final needsDownload =
         _rawPlaces.isEmpty || _usingSavedData || movedKm > _refetchDistanceKm;

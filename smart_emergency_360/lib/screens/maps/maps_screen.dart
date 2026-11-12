@@ -5,6 +5,7 @@ import '../../core/models/osm_place.dart';
 import '../../core/services/hospital_data.dart';
 import '../../core/services/hospital_repository.dart';
 import '../../core/services/launcher_service.dart';
+import '../../core/services/location_service.dart';
 import '../../core/services/nearby_services_repository.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/utils/incident_ui.dart';
@@ -43,6 +44,11 @@ class MapsScreen extends StatefulWidget {
   @override
   State<MapsScreen> createState() => _MapsScreenState();
 }
+
+/// Beyond this radius the fix is likely a network estimate, not GPS.
+const double _lowAccuracyMeters = 150;
+
+String _formatMeters(double meters) => meters.round().toString();
 
 class _MapsScreenState extends State<MapsScreen> {
   _Filter _filter = _Filter.all;
@@ -90,6 +96,8 @@ class _MapsScreenState extends State<MapsScreen> {
     final isArabic = context.lang.isArabic;
     final lat = hospitalRepo.currentLat;
     final lng = hospitalRepo.currentLng;
+    final accuracy = hospitalRepo.accuracyMeters;
+    final lowAccuracy = accuracy != null && accuracy > _lowAccuracyMeters;
 
     final places = <_Place>[
       for (final h in hospitalRepo.hospitals)
@@ -135,10 +143,44 @@ class _MapsScreenState extends State<MapsScreen> {
                         color: AppColors.primaryBlue,
                       ),
                       title: Text(context.tr('maps_current_location')),
+                      // Opens the exact fix in Google Maps so the user can
+                      // see for themselves whether it matches where they are.
+                      onTap: hospitalRepo.hasRealFix
+                          ? () => LauncherService().openMapsForCoordinates(
+                              latitude: lat,
+                              longitude: lng,
+                            )
+                          : null,
                       subtitle: hospitalRepo.hasRealFix
-                          ? LtrText(
-                              '${lat.toStringAsFixed(4)}, ${lng.toStringAsFixed(4)}',
-                              style: TextStyle(color: AppColors.textSecondary),
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                LtrText(
+                                  '${lat.toStringAsFixed(5)}, ${lng.toStringAsFixed(5)}',
+                                  style: TextStyle(
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                                if (accuracy != null)
+                                  Text(
+                                    context.trArgs('maps_accuracy', {
+                                      'm': _formatMeters(accuracy),
+                                    }),
+                                    style: TextStyle(
+                                      color: lowAccuracy
+                                          ? AppColors.dangerRed
+                                          : AppColors.success,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                Text(
+                                  context.tr('maps_check_on_google'),
+                                  style: TextStyle(
+                                    color: AppColors.primaryBlue,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
                             )
                           : Text(context.tr('maps_need_location')),
                       trailing: loading
@@ -153,6 +195,18 @@ class _MapsScreenState extends State<MapsScreen> {
                             ),
                     ),
                   ),
+                  if (hospitalRepo.approximateOnly) ...[
+                    const SizedBox(height: 10),
+                    _AccuracyWarning(
+                      textKey: 'maps_precise_off',
+                      actionKey: 'maps_open_settings',
+                      onAction: () =>
+                          context.read<LocationService>().openAppSettings(),
+                    ),
+                  ] else if (lowAccuracy) ...[
+                    const SizedBox(height: 10),
+                    const _AccuracyWarning(textKey: 'maps_low_accuracy'),
+                  ],
                   const SizedBox(height: 10),
                   const DisclaimerBanner(
                     textKey: 'maps_real_data_notice',
@@ -397,6 +451,61 @@ class _PlaceTile extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Explains why the location may be off, with an optional action button.
+class _AccuracyWarning extends StatelessWidget {
+  final String textKey;
+  final String? actionKey;
+  final VoidCallback? onAction;
+
+  const _AccuracyWarning({
+    required this.textKey,
+    this.actionKey,
+    this.onAction,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.dangerRed.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.dangerRed.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.gps_not_fixed_rounded,
+            color: AppColors.dangerRed,
+            size: 20,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.tr(textKey),
+                  style: TextStyle(fontSize: 13, color: AppColors.textPrimary),
+                ),
+                if (actionKey != null && onAction != null)
+                  Align(
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: TextButton(
+                      onPressed: onAction,
+                      child: Text(context.tr(actionKey!)),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

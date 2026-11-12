@@ -1059,6 +1059,30 @@ final Map<String, Map<AppLocale, String>> translations = {
   },
   'maps_distance': {AppLocale.en: 'Distance', AppLocale.ar: 'المسافة'},
   'maps_locate_me': {AppLocale.en: 'Locate me', AppLocale.ar: 'حدد موقعي'},
+  'maps_accuracy': {
+    AppLocale.en: 'Accuracy ±{m} m',
+    AppLocale.ar: 'الدقة ±{m} م',
+  },
+  'maps_check_on_google': {
+    AppLocale.en: 'Tap to check it on Google Maps',
+    AppLocale.ar: 'اضغط لمطابقته على خرائط Google',
+  },
+  'maps_low_accuracy': {
+    AppLocale.en:
+        'Your location is approximate. Turn on GPS, move near a window or outdoors, then tap "Locate me" again. On a computer the location comes from the network, so it can be far off.',
+    AppLocale.ar:
+        'موقعك تقريبي. فعّل GPS واقترب من نافذة أو اخرج إلى مكان مفتوح، ثم اضغط «حدد موقعي» مجدداً. على الكمبيوتر يُقدَّر الموقع من الشبكة، فقد يكون بعيداً عن مكانك الحقيقي.',
+  },
+  'maps_precise_off': {
+    AppLocale.en:
+        'Precise location is off for this app, so your position can be kilometres away. Turn on "Precise location" in the app settings.',
+    AppLocale.ar:
+        'الموقع الدقيق مغلق لهذا التطبيق، فقد يبعد موقعك كيلومترات. فعّل «الموقع الدقيق» من إعدادات التطبيق.',
+  },
+  'maps_open_settings': {
+    AppLocale.en: 'Open settings',
+    AppLocale.ar: 'فتح الإعدادات',
+  },
   'maps_filter_all': {AppLocale.en: 'All', AppLocale.ar: 'الكل'},
 
   // ---------------------------------------------------------------- settings

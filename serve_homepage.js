@@ -36,7 +36,9 @@ const server = http.createServer((req, res) => {
   }
 
   const safePath = path.normalize(path.join(ROOT_DIR, reqPath));
-  if (!safePath.startsWith(ROOT_DIR)) {
+  // Must be inside ROOT_DIR itself - not a sibling folder whose name merely
+  // starts with the same text (e.g. "... - Copy (2)").
+  if (safePath !== ROOT_DIR && !safePath.startsWith(ROOT_DIR + path.sep)) {
     res.writeHead(403);
     res.end('Forbidden');
     return;
@@ -45,7 +47,14 @@ const server = http.createServer((req, res) => {
   fs.stat(safePath, (err, stats) => {
     if (!err && stats.isDirectory()) {
       // /app -> /app/ so the app's relative paths resolve inside the folder.
-      res.writeHead(301, { Location: reqPath + '/' });
+      // The target is rebuilt from the resolved path, never from the raw
+      // request, so "//host" can't turn it into a redirect to another site.
+      const rel = path
+        .relative(ROOT_DIR, safePath)
+        .split(path.sep)
+        .map(encodeURIComponent)
+        .join('/');
+      res.writeHead(301, { Location: rel ? `/${rel}/` : '/' });
       res.end();
       return;
     }

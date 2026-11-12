@@ -42,6 +42,17 @@ class AppColors {
   static Color get emergencyRed => dangerRed;
   static const Color softPurple = Color(0xFF8A8AFF);
 
+  // --------------------------------------------- emergency service colors
+  // Filled icon circles with a white symbol (Home quick services, SOS type
+  // grid). Each passes 3:1 contrast against white, the minimum for icons.
+  static const Color serviceMedical = Color(0xFFE53935); // 4.2:1
+  static const Color servicePolice = Color(0xFF1565C0); // 5.8:1
+  static const Color serviceFire = Color(0xFFEF6C00); // 3.1:1
+  static const Color serviceProtection = Color(0xFF6A5AE0); // 5.1:1
+  static const Color serviceAccident = Color(0xFFC77700); // 3.5:1
+  static const Color serviceDanger = Color(0xFF8E24AA); // 7.0:1
+  static const Color serviceOther = Color(0xFF546E7A); // 5.4:1
+
   // ----------------------------------------------------------- status
   static const Color success = Color(0xFF2E7D32);
   static const Color warning = Color(0xFFF9A825);

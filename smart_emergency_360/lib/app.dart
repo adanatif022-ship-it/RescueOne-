@@ -12,6 +12,7 @@ import 'core/services/settings_repository.dart';
 import 'core/theme/app_colors.dart';
 import 'core/theme/app_theme.dart';
 import 'core/utils/incident_ui.dart';
+import 'core/widgets/auth_background.dart';
 import 'screens/history/incident_details_screen.dart';
 import 'screens/root/root_shell.dart';
 
@@ -177,8 +178,10 @@ class _RescueOneAppState extends State<RescueOneApp> {
               ],
               // Caps content width on wide desktop-browser windows so cards
               // don't stretch edge-to-edge; a no-op on phones.
-              builder: (context, child) => ColoredBox(
-                color: AppColors.background,
+              // The soft-glow backdrop spans the whole window; opaque
+              // screens cover it, the welcome and sign-in screens show it.
+              builder: (context, child) => AuthBackground(
+                fullWindow: true,
                 child: Center(
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 560),

@@ -13,6 +13,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/utils/display_name.dart';
 import '../../core/utils/incident_ui.dart';
 import '../../core/widgets/premium_card.dart';
+import '../../core/widgets/service_icon.dart';
 import '../../core/widgets/responsive_section.dart';
 import '../../core/widgets/section_title.dart';
 import '../assistant/ai_assistant_screen.dart';
@@ -528,25 +529,25 @@ class _QuickServicesRow extends StatelessWidget {
       (
         Icons.medical_services_rounded,
         'home_call_ambulance',
-        AppColors.dangerRed,
+        AppColors.serviceMedical,
         IncidentType.medical,
       ),
       (
         Icons.local_police_rounded,
         'home_call_police',
-        AppColors.primaryBlue,
+        AppColors.servicePolice,
         IncidentType.security,
       ),
       (
         Icons.local_fire_department_rounded,
         'home_call_fire',
-        const Color(0xFFE08600),
+        AppColors.serviceFire,
         IncidentType.fire,
       ),
       (
-        Icons.shield_rounded,
+        Icons.security_rounded,
         'home_personal_protection',
-        const Color(0xFF6A5AE0),
+        AppColors.serviceProtection,
         IncidentType.danger,
       ),
     ];
@@ -611,17 +612,7 @@ class _QuickServiceTile extends StatelessWidget {
               maxScaleFactor: 1.3,
               child: Column(
                 children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: color.withValues(
-                        alpha: AppColors.isDark ? 0.22 : 0.12,
-                      ),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Icon(icon, color: color, size: 26),
-                  ),
+                  ServiceIcon(icon: icon, color: color),
                   const SizedBox(height: 8),
                   Text(
                     label,

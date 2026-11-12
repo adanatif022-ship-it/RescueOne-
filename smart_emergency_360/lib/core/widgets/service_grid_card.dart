@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
+import 'service_icon.dart';
 
 /// Shared large icon/title/(optional subtitle) card with a selectable
 /// state, used for the Home quick services and the emergency-type grid.
@@ -102,20 +103,11 @@ class ServiceGridCard extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                            width: iconBox,
-                            height: iconBox,
-                            decoration: BoxDecoration(
-                              color: selected
-                                  ? Colors.white.withValues(alpha: 0.18)
-                                  : color.withValues(alpha: 0.12),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              icon,
-                              color: selected ? Colors.white : color,
-                              size: 26,
-                            ),
+                          ServiceIcon(
+                            icon: icon,
+                            color: color,
+                            size: iconBox,
+                            inverted: selected,
                           ),
                           const SizedBox(height: 8),
                           Text(

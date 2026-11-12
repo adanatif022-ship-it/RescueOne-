@@ -25,3 +25,6 @@ app/**/*.symbols
 *.iml
 .DS_Store
 Thumbs.db
+
+# Dev-only screenshot renderer and its output.
+smart_emergency_360/tool/

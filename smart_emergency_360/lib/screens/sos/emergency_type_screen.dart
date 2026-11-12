@@ -250,6 +250,7 @@ class _TypeGrid extends StatelessWidget {
         final type = IncidentType.values[index];
         return ServiceGridCard(
           icon: incidentTypeIcon(type),
+          color: incidentTypeColor(type),
           title: context.tr(incidentTypeKey(type)),
           subtitle: context.tr(incidentTypeDescKey(type)),
           selected: type == selected,

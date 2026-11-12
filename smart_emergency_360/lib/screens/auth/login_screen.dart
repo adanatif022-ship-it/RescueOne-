@@ -6,6 +6,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/app_back_button.dart';
 import '../../core/widgets/app_logo.dart';
+import '../../core/widgets/auth_background.dart';
 import '../../core/widgets/gradient_button.dart';
 import '../../core/widgets/language_selector.dart';
 import '../../core/widgets/responsive_section.dart';
@@ -111,170 +112,211 @@ class _LoginScreenState extends State<LoginScreen> {
     final emailValidationMsg = context.tr('login_validation_email');
     final passwordValidationMsg = context.tr('login_validation_password_empty');
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: ResponsiveSection(
-            vertical: 12,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Back to the welcome screen + language.
-                const Row(
-                  children: [AppBackButton(), Spacer(), LanguageSelector()],
-                ),
-                const SizedBox(height: 16),
-                const Center(child: AppLogo(size: 76)),
-                const SizedBox(height: 20),
-                Text(
-                  context.tr('login_title'),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.textPrimary,
+    return AuthBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: ResponsiveSection(
+              vertical: 12,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Back to the welcome screen + language.
+                  const Row(
+                    children: [AppBackButton(), Spacer(), LanguageSelector()],
                   ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  context.tr('login_subtitle'),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-                const SizedBox(height: 28),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        context.tr('login_email'),
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                      const SizedBox(height: 6),
-                      TextFormField(
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        textDirection: TextDirection.ltr,
-                        autofillHints: const [AutofillHints.email],
-                        decoration: const InputDecoration(
-                          hintText: 'name@example.com',
-                          prefixIcon: Icon(Icons.mail_outline_rounded),
-                        ),
-                        validator: (value) {
-                          if (value == null || !value.contains('@')) {
-                            return emailValidationMsg;
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        context.tr('login_password'),
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                      const SizedBox(height: 6),
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: _obscure,
-                        decoration: InputDecoration(
-                          hintText: '••••••••',
-                          prefixIcon: const Icon(Icons.lock_outline_rounded),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscure
-                                  ? Icons.visibility_outlined
-                                  : Icons.visibility_off_outlined,
-                            ),
-                            onPressed: () =>
-                                setState(() => _obscure = !_obscure),
-                          ),
-                        ),
-                        autofillHints: const [AutofillHints.password],
-                        onFieldSubmitted: (_) => _busy ? null : _signIn(),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return passwordValidationMsg;
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 6),
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: _rememberMe,
-                            onChanged: (v) =>
-                                setState(() => _rememberMe = v ?? true),
-                          ),
-                          Expanded(
-                            child: Text(
-                              context.tr('login_remember_me'),
-                              style: const TextStyle(fontSize: 13),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: _forgotPassword,
-                            child: Text(context.tr('login_forgot_password')),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 12),
-                GradientButton(
-                  label: context.tr('login_button'),
-                  icon: Icons.login_rounded,
-                  loading: _busy,
-                  onPressed: _busy ? null : _signIn,
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    const Expanded(child: Divider()),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        context.tr('login_or_divider'),
-                        style: TextStyle(color: AppColors.textSecondary),
-                      ),
+                  const SizedBox(height: 16),
+                  const Center(child: AppLogo(size: 76)),
+                  const SizedBox(height: 20),
+                  Text(
+                    context.tr('login_title'),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.textPrimary,
                     ),
-                    const Expanded(child: Divider()),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  height: AppTheme.buttonHeight,
-                  child: FilledButton.tonalIcon(
-                    icon: const Icon(Icons.arrow_forward_rounded),
-                    label: Text(
-                      context.tr('login_guest'),
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    context.tr('login_subtitle'),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: AppColors.textSecondary,
                     ),
-                    onPressed: _continueAsGuest,
                   ),
-                ),
-                const SizedBox(height: 12),
-                OutlinedButton(
-                  onPressed: _goToRegister,
-                  child: Text(context.tr('register_title')),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  context.tr('login_prototype_notice'),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textSecondary,
-                    fontStyle: FontStyle.italic,
+                  const SizedBox(height: 28),
+                  AuthCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                context.tr('login_email'),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              TextFormField(
+                                controller: _emailController,
+                                keyboardType: TextInputType.emailAddress,
+                                textDirection: TextDirection.ltr,
+                                autofillHints: const [AutofillHints.email],
+                                decoration: const InputDecoration(
+                                  hintText: 'name@example.com',
+                                  prefixIcon: Icon(Icons.mail_outline_rounded),
+                                ),
+                                validator: (value) {
+                                  if (value == null || !value.contains('@')) {
+                                    return emailValidationMsg;
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                context.tr('login_password'),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              TextFormField(
+                                controller: _passwordController,
+                                obscureText: _obscure,
+                                decoration: InputDecoration(
+                                  hintText: '••••••••',
+                                  prefixIcon: const Icon(
+                                    Icons.lock_outline_rounded,
+                                  ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _obscure
+                                          ? Icons.visibility_outlined
+                                          : Icons.visibility_off_outlined,
+                                    ),
+                                    onPressed: () =>
+                                        setState(() => _obscure = !_obscure),
+                                  ),
+                                ),
+                                autofillHints: const [AutofillHints.password],
+                                onFieldSubmitted: (_) =>
+                                    _busy ? null : _signIn(),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return passwordValidationMsg;
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 6),
+                              Row(
+                                children: [
+                                  Checkbox(
+                                    value: _rememberMe,
+                                    onChanged: (v) =>
+                                        setState(() => _rememberMe = v ?? true),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      context.tr('login_remember_me'),
+                                      style: const TextStyle(fontSize: 13),
+                                    ),
+                                  ),
+                                  // Flexible: inside the card on a narrow
+                                  // phone the label wraps instead of
+                                  // overflowing (long in English).
+                                  Flexible(
+                                    child: TextButton(
+                                      style: TextButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                        ),
+                                      ),
+                                      onPressed: _forgotPassword,
+                                      child: Text(
+                                        context.tr('login_forgot_password'),
+                                        textAlign: TextAlign.end,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        GradientButton(
+                          label: context.tr('login_button'),
+                          icon: Icons.login_rounded,
+                          loading: _busy,
+                          onPressed: _busy ? null : _signIn,
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            const Expanded(child: Divider()),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                              ),
+                              child: Text(
+                                context.tr('login_or_divider'),
+                                style: TextStyle(
+                                  color: AppColors.textSecondary,
+                                ),
+                              ),
+                            ),
+                            const Expanded(child: Divider()),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        SizedBox(
+                          height: AppTheme.buttonHeight,
+                          child: FilledButton.tonalIcon(
+                            style: FilledButton.styleFrom(
+                              backgroundColor: AppColors.primaryBlue.withValues(
+                                alpha: AppColors.isDark ? 0.18 : 0.10,
+                              ),
+                              foregroundColor: AppColors.primaryBlue,
+                            ),
+                            icon: const Icon(Icons.arrow_forward_rounded),
+                            label: Text(
+                              context.tr('login_guest'),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            onPressed: _continueAsGuest,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        OutlinedButton(
+                          onPressed: _goToRegister,
+                          child: Text(context.tr('register_title')),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 16),
+                  Text(
+                    context.tr('login_prototype_notice'),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

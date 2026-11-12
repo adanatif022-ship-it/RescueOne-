@@ -3,6 +3,8 @@ import '../../core/language/app_language.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/app_logo.dart';
+import '../../core/widgets/auth_background.dart';
+import '../../core/widgets/service_icon.dart';
 import '../../core/widgets/gradient_button.dart';
 import '../../core/widgets/language_selector.dart';
 import '../../core/widgets/responsive_section.dart';
@@ -20,98 +22,96 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: Stack(
-        children: [
-          const _BackgroundPattern(),
-          SafeArea(
-            // Scrolls on short screens / landscape; on normal phones the
-            // Spacers still spread the content over the full height.
-            child: LayoutBuilder(
-              builder: (context, constraints) => SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                  child: IntrinsicHeight(
-                    child: ResponsiveSection(
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 12),
-                          Align(
-                            alignment: AlignmentDirectional.centerEnd,
-                            child: const LanguageSelector(),
+    // Same soft-glow background as Sign In / Create Account.
+    return AuthBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          // Scrolls on short screens / landscape; on normal phones the
+          // Spacers still spread the content over the full height.
+          child: LayoutBuilder(
+            builder: (context, constraints) => SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: ResponsiveSection(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 12),
+                        Align(
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: const LanguageSelector(),
+                        ),
+                        const Spacer(),
+                        const AppLogo(size: 108),
+                        const SizedBox(height: 20),
+                        Text(
+                          context.tr('app_name'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 26,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.textPrimary,
                           ),
-                          const Spacer(),
-                          const AppLogo(size: 108),
-                          const SizedBox(height: 20),
-                          Text(
-                            context.tr('app_name'),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.w800,
-                              color: AppColors.textPrimary,
-                            ),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          context.tr('splash_tagline'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: AppColors.textSecondary,
+                            fontWeight: FontWeight.w600,
                           ),
-                          const SizedBox(height: 12),
-                          Text(
-                            context.tr('splash_tagline'),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: AppColors.textSecondary,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 28),
-                          const _ServiceIconsRow(),
-                          const Spacer(),
-                          const _SosNowButton(),
-                          const SizedBox(height: 14),
-                          GradientButton(
-                            label: context.lang.isArabic
-                                ? 'الدخول إلى الصفحة الرئيسية'
-                                : 'Enter Home Page',
-                            icon: Icons.home_rounded,
-                            onPressed: () =>
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (_) => const RootShell(),
-                                  ),
-                                ),
-                          ),
-                          const SizedBox(height: 12),
-                          SizedBox(
-                            height: AppTheme.buttonHeight,
-                            child: OutlinedButton.icon(
-                              icon: const Icon(Icons.login_rounded),
-                              label: Text(context.tr('login_button')),
-                              onPressed: () => Navigator.of(context).push(
+                        ),
+                        const SizedBox(height: 28),
+                        const _ServiceIconsRow(),
+                        const Spacer(),
+                        const _SosNowButton(),
+                        const SizedBox(height: 14),
+                        GradientButton(
+                          label: context.lang.isArabic
+                              ? 'الدخول إلى الصفحة الرئيسية'
+                              : 'Enter Home Page',
+                          icon: Icons.home_rounded,
+                          onPressed: () =>
+                              Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                  builder: (_) => const LoginScreen(),
+                                  builder: (_) => const RootShell(),
                                 ),
                               ),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          TextButton(
+                        ),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          height: AppTheme.buttonHeight,
+                          child: OutlinedButton.icon(
+                            icon: const Icon(Icons.login_rounded),
+                            label: Text(context.tr('login_button')),
                             onPressed: () => Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (_) => const RegisterScreen(),
+                                builder: (_) => const LoginScreen(),
                               ),
                             ),
-                            child: Text(context.tr('register_title')),
                           ),
-                          const SizedBox(height: 20),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 12),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const RegisterScreen(),
+                            ),
+                          ),
+                          child: Text(context.tr('register_title')),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
                     ),
                   ),
                 ),
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -123,10 +123,26 @@ class _ServiceIconsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      (Icons.medical_services_rounded, context.tr('splash_services_medical')),
-      (Icons.local_police_rounded, context.tr('splash_services_police')),
-      (Icons.local_fire_department_rounded, context.tr('splash_services_fire')),
-      (Icons.shield_rounded, context.tr('splash_services_protection')),
+      (
+        Icons.medical_services_rounded,
+        context.tr('splash_services_medical'),
+        AppColors.serviceMedical,
+      ),
+      (
+        Icons.local_police_rounded,
+        context.tr('splash_services_police'),
+        AppColors.servicePolice,
+      ),
+      (
+        Icons.local_fire_department_rounded,
+        context.tr('splash_services_fire'),
+        AppColors.serviceFire,
+      ),
+      (
+        Icons.security_rounded,
+        context.tr('splash_services_protection'),
+        AppColors.serviceProtection,
+      ),
     ];
     // Each item gets an equal share of the width and its label may wrap -
     // fixed-width labels overflowed on 360-px-wide phones.
@@ -137,19 +153,7 @@ class _ServiceIconsRow extends StatelessWidget {
             (item) => Expanded(
               child: Column(
                 children: [
-                  Container(
-                    width: 52,
-                    height: 52,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryBlue.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      item.$1,
-                      color: AppColors.primaryBlue,
-                      size: 24,
-                    ),
-                  ),
+                  ServiceIcon(icon: item.$1, color: item.$3, size: 52),
                   const SizedBox(height: 6),
                   Text(
                     item.$2,
@@ -169,60 +173,6 @@ class _ServiceIconsRow extends StatelessWidget {
           .toList(),
     );
   }
-}
-
-/// Soft circular technology-pattern backdrop - decorative only, kept far
-/// below the interactive content in the stack so it never intercepts taps.
-class _BackgroundPattern extends StatelessWidget {
-  const _BackgroundPattern();
-
-  @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: Stack(
-        children: [
-          Positioned(
-            top: -80,
-            right: -60,
-            child: _softCircle(
-              240,
-              AppColors.primaryBlue.withValues(alpha: 0.06),
-            ),
-          ),
-          Positioned(
-            top: 120,
-            left: -100,
-            child: _softCircle(
-              200,
-              AppColors.secondaryBlue.withValues(alpha: 0.08),
-            ),
-          ),
-          Positioned(
-            bottom: -100,
-            right: -80,
-            child: _softCircle(
-              260,
-              AppColors.brightBlue.withValues(alpha: 0.05),
-            ),
-          ),
-          Positioned(
-            bottom: 60,
-            left: -60,
-            child: _softCircle(
-              160,
-              AppColors.softPurple.withValues(alpha: 0.06),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _softCircle(double size, Color color) => Container(
-    width: size,
-    height: size,
-    decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-  );
 }
 
 /// One-tap SOS straight from the welcome screen - no sign-in needed.

@@ -13,13 +13,23 @@ IconData incidentTypeIcon(IncidentType type) {
     case IncidentType.accident:
       return Icons.car_crash_rounded;
     case IncidentType.danger:
-      return Icons.warning_amber_rounded;
+      return Icons.warning_rounded;
     case IncidentType.security:
       return Icons.shield_rounded;
     case IncidentType.other:
-      return Icons.help_outline_rounded;
+      return Icons.help_rounded;
   }
 }
+
+/// Each emergency type's own color (filled icon circles, selected card).
+Color incidentTypeColor(IncidentType type) => switch (type) {
+  IncidentType.medical => AppColors.serviceMedical,
+  IncidentType.fire => AppColors.serviceFire,
+  IncidentType.accident => AppColors.serviceAccident,
+  IncidentType.danger => AppColors.serviceDanger,
+  IncidentType.security => AppColors.servicePolice,
+  IncidentType.other => AppColors.serviceOther,
+};
 
 String incidentTypeKey(IncidentType type) {
   switch (type) {

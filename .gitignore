@@ -1,0 +1,27 @@
+# --- Kept out of the public repository -----------------------------------
+# The APK is published as a GitHub Release asset, not committed.
+*.apk
+*.aab
+*.zip
+# Reports, presentation and their text dumps (personal information).
+*.pdf
+*.pptx
+*.docx
+*_dump.txt
+# Old version of the app and its one-off script.
+rescue_one/
+update_loc.py
+
+# --- Flutter build outputs (the site's web build lives in app/) ----------
+smart_emergency_360/build/
+smart_emergency_360/.dart_tool/
+smart_emergency_360/android/.kotlin/
+# Debug symbols are not needed to run the site.
+app/**/*.symbols
+
+# --- Editors / OS --------------------------------------------------------
+.vscode/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db

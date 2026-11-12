@@ -1,0 +1,14 @@
+# Static site: nothing to build. The landing page is index.html at the
+# root and the Flutter web app is the pre-built app/ folder.
+# (Vercel needs no config file: Framework "Other", no build command,
+# output directory = the repository root.)
+[build]
+  publish = "."
+  command = ""
+
+# Flutter keeps the same file names between versions, so browsers must
+# re-check them - otherwise visitors keep an old version after an update.
+[[headers]]
+  for = "/app/*"
+  [headers.values]
+    Cache-Control = "no-cache"

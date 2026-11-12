@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <!-- Relative on purpose: the same build works at the site root, in a
+       sub-folder (e.g. /app/) and on GitHub Pages (/<repo>/app/). The app
+       uses hash URLs, so a relative base never breaks navigation. Don't
+       pass --base-href when building. -->
+  <base href="./">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Rescue One - SOS alerts, real nearby hospitals (OpenStreetMap) with smart routing, and an incident assistant. Arabic and English.">
+  <meta name="theme-color" content="#0A6FD8">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Rescue One">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>Rescue One | ريسكيو ون</title>
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    :root { --bg: #F6FAFF; --text: #062B4F; --muted: #5A7A94; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #0A1424; --text: #E7F0FA; --muted: #93AECA; }
+    }
+    html, body { margin: 0; height: 100%; background: var(--bg); }
+    #loader {
+      position: fixed; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 14px;
+      font-family: "Segoe UI", Tahoma, Roboto, Arial, sans-serif;
+      color: var(--text); transition: opacity .3s ease;
+    }
+    #loader .logo-wrap {
+      width: 96px; height: 96px; border-radius: 50%; position: relative;
+      background: #FFFFFF;
+      box-shadow: 0 10px 30px rgba(13, 139, 255, .25);
+      border: 2px solid rgba(10, 111, 216, 0.2);
+      display: flex; align-items: center; justify-content: center;
+      padding: 6px; box-sizing: border-box;
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    #loader .logo-wrap img {
+      width: 100%; height: 100%; object-fit: contain; border-radius: 50%;
+    }
+    #loader .name { font-weight: 800; font-size: 20px; }
+    #loader .hint { font-size: 13px; color: var(--muted); }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+    @media (prefers-reduced-motion: reduce) { #loader .logo-wrap { animation: none; } }
+  </style>
+</head>
+<body>
+  <div id="loader" role="status" aria-live="polite">
+    <div class="logo-wrap">
+      <img src="logo.png" alt="Rescue One Logo">
+    </div>
+    <div class="name">ريسكيو ون · Rescue One</div>
+    <div class="hint">جارٍ التحميل… · Loading…</div>
+  </div>
+  <script>
+    // Hide the loading screen once Flutter has drawn its first frame.
+    window.addEventListener('flutter-first-frame', function () {
+      var loader = document.getElementById('loader');
+      if (!loader) return;
+      loader.style.opacity = '0';
+      setTimeout(function () { loader.remove(); }, 350);
+    });
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_emergency_360/app.dart';
 import 'package:smart_emergency_360/app_dependencies.dart';
 import 'package:smart_emergency_360/core/models/osm_place.dart';
+import 'package:smart_emergency_360/core/services/auth_backend.dart';
 import 'package:smart_emergency_360/core/theme/app_colors.dart';
 import 'package:smart_emergency_360/screens/auth/login_screen.dart';
 import 'package:smart_emergency_360/screens/root/root_shell.dart';
@@ -20,9 +21,13 @@ Future<void> usePhoneSize(WidgetTester tester) async {
   addTearDown(tester.view.reset);
 }
 
-Future<AppDependencies> loadApp({Map<String, Object> prefs = const {}}) async {
+Future<AppDependencies> loadApp({
+  Map<String, Object> prefs = const {},
+  AuthBackend? authBackend,
+}) async {
   SharedPreferences.setMockInitialValues(prefs);
   return AppDependencies.load(
+    authBackend: authBackend,
     location: FakeLocationService(lat: 12.7855, lng: 45.0187),
     placesService: FakeOsmPlacesService(
       places: [
@@ -48,7 +53,7 @@ Future<AppDependencies> loadApp({Map<String, Object> prefs = const {}}) async {
 void main() {
   tearDown(() => AppColors.setDark(false));
 
-  testWidgets('first launch opens directly on Home (RootShell)', (
+  testWidgets('first visit opens on the welcome screen, not as a guest', (
     tester,
   ) async {
     await usePhoneSize(tester);
@@ -58,7 +63,28 @@ void main() {
     await tester.pumpWidget(RescueOneApp(dependencies: deps!));
     await tester.pumpAndSettle();
 
+    expect(find.byType(SplashScreen), findsOneWidget);
+    expect(find.byType(RootShell), findsNothing);
+    expect(deps.auth.isGuest, isFalse);
+  });
+
+  testWidgets('a signed-in account opens straight on Home', (tester) async {
+    await usePhoneSize(tester);
+    final backend = FakeAuthBackend();
+    final deps = await tester.runAsync(() async {
+      await backend.signUp(
+        email: 'user@example.com',
+        password: 'secret123',
+        name: 'Test User',
+        phone: '0123456',
+      );
+      return loadApp(prefs: {'app_locale': 'en'}, authBackend: backend);
+    });
+    await tester.pumpWidget(RescueOneApp(dependencies: deps!));
+    await tester.pumpAndSettle();
+
     expect(find.byType(RootShell), findsOneWidget);
+    expect(find.textContaining('Test User'), findsWidgets);
   });
 
   testWidgets('welcome screen with SOS can be shown and used', (tester) async {

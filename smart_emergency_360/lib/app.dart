@@ -15,6 +15,7 @@ import 'core/utils/incident_ui.dart';
 import 'core/widgets/auth_background.dart';
 import 'screens/history/incident_details_screen.dart';
 import 'screens/root/root_shell.dart';
+import 'screens/splash/splash_screen.dart';
 
 class RescueOneApp extends StatefulWidget {
   const RescueOneApp({super.key, required this.dependencies, this.initialHome});
@@ -40,9 +41,13 @@ class _RescueOneAppState extends State<RescueOneApp> {
     _darkApplied = deps.settings.darkMode;
     AppColors.setDark(_darkApplied);
 
-    // Open straight on Home (RootShell) so every feature (SOS, Hospitals,
-    // AI Assistant, Maps) is immediately available upon opening the link.
-    _home = widget.initialHome ?? const RootShell();
+    // Someone who signed in with an account, or chose "Continue as guest"
+    // with "Remember me", opens straight on Home. Everyone else - a first
+    // visit included - starts on the welcome screen, which has its own SOS
+    // button (no sign-in needed), Sign In, Create account and "Enter Home".
+    _home =
+        widget.initialHome ??
+        (deps.auth.isSignedIn ? const RootShell() : const SplashScreen());
 
     deps.notifications.onNew = _showIncidentBanner;
     deps.auth.addListener(_onAuthChanged);

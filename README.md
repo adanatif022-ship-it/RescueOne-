@@ -12,10 +12,12 @@
 
 ## الموقع
 
+**الموقع المنشور:** https://melodic-brioche-19a4c5.netlify.app — يُحدَّث تلقائياً من Netlify عند كل رفع إلى فرع `main`.
+
 | الرابط | ما يفتحه |
 |---|---|
-| `/` (`index.html`) | الصفحة التعريفية بالعربية والإنجليزية |
-| `/app/` | التطبيق كاملاً في المتصفح |
+| [`/`](https://melodic-brioche-19a4c5.netlify.app/) | الصفحة التعريفية بالعربية والإنجليزية |
+| [`/app/`](https://melodic-brioche-19a4c5.netlify.app/app/) | التطبيق كاملاً في المتصفح |
 | [Releases](https://github.com/adanatif022-ship-it/RescueOne-/releases/latest) | ملف APK لأندرويد |
 
 الموقع ملفات ثابتة فقط، فيعمل على أي استضافة: GitHub Pages أو Netlify أو Vercel أو Cloudflare Pages أو Hostinger.
@@ -44,8 +46,8 @@ flutter build web --release -o "$PWD\..\app"
 **إعدادات مطلوبة في لوحة Supabase:**
 
 1. **Authentication ← URL Configuration:**
-   - اجعل **Site URL** رابط التطبيق المنشور، مثل `https://<موقعك>/app/`.
-   - أضف الرابط نفسه في **Redirect URLs**.
+   - **Site URL:** `https://melodic-brioche-19a4c5.netlify.app/app/`
+   - **Redirect URLs:** `https://melodic-brioche-19a4c5.netlify.app/**`
 
    روابط تأكيد البريد وإعادة تعيين كلمة المرور تفتح هذا الرابط.
 2. **إرسال البريد:** خادم البريد المجاني في Supabase يرسل فقط إلى أعضاء فريق المشروع. أمامك خياران:
